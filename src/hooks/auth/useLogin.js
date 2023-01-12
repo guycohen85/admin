@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import useToken from './useToken';
 
-const axiosConfig = { withCredentials: true };
 
 function useLogin() {
   const { setUser } = useUser();
@@ -16,7 +15,6 @@ function useLogin() {
   const login = async (loginCredentials) => {
     await axiosFn('POST', 'login', {
       data: loginCredentials,
-      ...axiosConfig,
     });
   };
 

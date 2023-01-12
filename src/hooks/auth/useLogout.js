@@ -3,7 +3,6 @@ import useAuthAxiosFunction from '../axios/useAxiosAuthFunction';
 import { useNavigate } from 'react-router-dom';
 import useToken from './useToken';
 
-const axiosConfig = { withCredentials: true };
 
 function useLogout() {
   const { user, removeUser } = useUser();
@@ -15,7 +14,6 @@ function useLogout() {
   const logout = async () => {
     axiosFn('POST', 'logout', {
       data: { id: user.id },
-      ...axiosConfig,
     });
     removeUser();
     setAccessToken(null);

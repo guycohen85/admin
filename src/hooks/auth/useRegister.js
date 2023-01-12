@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import useToken from './useToken';
 
-const axiosConfig = { withCredentials: true };
 
 function useRegister() {
   const { setUser } = useUser();
@@ -16,7 +15,6 @@ function useRegister() {
   const register = async (registerCredentials) => {
     await axiosFn('POST', 'register', {
       data: registerCredentials,
-      ...axiosConfig,
     });
   };
 
