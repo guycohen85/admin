@@ -4,6 +4,7 @@ import Login from 'pages/Login';
 import Register from 'pages/Register';
 import Protected from 'pages/Protected';
 import Profile from 'pages/Profile';
+import Users from 'pages/Users';
 import NotFound from 'pages/NotFound';
 import AuthRoute from 'components/AuthRoute';
 
@@ -19,6 +20,7 @@ function Router() {
         <Route element={<AuthRoute />}>
           <Route path="/protected" element={<Protected />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/users" element={<Users />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

@@ -22,7 +22,7 @@ const schema = Joi.object({
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { register: registerRequest, user } = useUser();
+  const { register: registerRequest, user } = useUser();// TODO: wrong use of register
 
   const {
     register,

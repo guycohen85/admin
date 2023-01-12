@@ -6,15 +6,20 @@ import './startup/fonts';
 import AppThemeProvider from 'startup/theme';
 import { UserProvider } from 'context/UserProvider';
 import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   //<React.StrictMode>
   <BrowserRouter>
     <AppThemeProvider>
-      <UserProvider>
-        <App />
-      </UserProvider>
+      <QueryClientProvider client={queryClient}>
+        <UserProvider>
+          <App />
+        </UserProvider>
+      </QueryClientProvider>
     </AppThemeProvider>
   </BrowserRouter>
   //</React.StrictMode>
