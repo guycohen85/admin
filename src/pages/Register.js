@@ -23,7 +23,7 @@ const schema = Joi.object({
 });
 
 export default function Register() {
-  const [registerRequest, response, error] = useRegister();
+  const { mutateRegister, errorRegister } = useRegister();
 
   const {
     register,
@@ -35,17 +35,17 @@ export default function Register() {
 
   const onSubmit = async (data) => {
     clearErrors('server');
-    await registerRequest(data);
+    await mutateRegister(data);
   };
 
   useEffect(() => {
-    if (error.response || error.message) {
+    if (errorRegister?.response || errorRegister?.message) {
       setError('server', {
         type: 'server',
-        message: error.response?.data?.error?.message || error.message,
+        message: errorRegister.response?.data?.error?.message || errorRegister.message,
       });
     }
-  }, [error, errors, setError]);
+  }, [errorRegister, errors, setError]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -110,12 +110,7 @@ export default function Register() {
               />
             </Grid>
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Sign Up
           </Button>
           <Grid container justifyContent="flex-end">
@@ -125,9 +120,7 @@ export default function Register() {
               </Link>
             </Grid>
           </Grid>
-          {errors.server && (
-            <Typography color="error">{errors.server.message}</Typography>
-          )}
+          {errors.server && <Typography color="error">{errors.server.message}</Typography>}
         </Box>
       </Box>
     </Container>

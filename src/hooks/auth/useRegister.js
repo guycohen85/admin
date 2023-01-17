@@ -1,32 +1,28 @@
-import { useUser } from 'context/UserProvider';
-import useAxiosFunction from '../axios/useAxiosFunction';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import useToken from './useToken';
+import { api, setHeaderToken } from '../../api/api';
+import { useQueryClient, useMutation } from 'react-query';
 
+const register = async (registerCredentials) => {
+  const { data } = await api.post('register', registerCredentials, {
+    withCredentials: true,
+  });
+  return data;
+};
 
 function useRegister() {
-  const { setUser } = useUser();
-  const { setAccessToken } = useToken();
-  const [axiosFn, response, error, isLoading] = useAxiosFunction();
-
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const register = async (registerCredentials) => {
-    await axiosFn('POST', 'register', {
-      data: registerCredentials,
-    });
-  };
+  const { mutate, error } = useMutation({
+    mutationFn: (registerCredentials) => register(registerCredentials),
+    onSuccess: (data) => {
+      setHeaderToken(data.accessToken);
+      queryClient.setQueryData(['user'], data.user);
+      navigate('/profile');
+    },
+  });
 
-  useEffect(() => {
-    if (response.data) {
-      setUser(response.data.user);
-      setAccessToken(response.data.accessToken);
-      response && navigate('/profile');
-    }
-  }, [response, setUser, setAccessToken, navigate]);
-
-  return [register, response, error, isLoading];
+  return { mutateRegister: mutate, errorRegister: error };
 }
 
 export default useRegister;

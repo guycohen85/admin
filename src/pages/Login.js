@@ -21,7 +21,7 @@ import { useEffect } from 'react';
 const schema = Joi.object({ email, password });
 
 export default function Login() {
-  const [login, response, error] = useLogin();
+  const { mutateLogin, errorLogin } = useLogin();
 
   const {
     register,
@@ -33,17 +33,17 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     clearErrors('server');
-    await login(data);
+    await mutateLogin(data);
   };
 
   useEffect(() => {
-    if (error.response || error.message) {
+    if (errorLogin?.response || errorLogin?.message) {
       setError('server', {
         type: 'server',
-        message: error.response?.data?.error?.message || error.message,
+        message: errorLogin.response?.data?.error?.message || errorLogin.message,
       });
     }
-  }, [error, errors, setError]);
+  }, [errorLogin, errors, setError]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -64,7 +64,6 @@ export default function Login() {
         </Typography>
         <Box
           component="form"
-          // onSubmit={handleSubmit((data) => login(data, setError))}
           onSubmit={handleSubmit(onSubmit)}
           noValidate
           sx={{ mt: 1 }}
@@ -95,12 +94,7 @@ export default function Login() {
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           /> */}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
             Sign In
           </Button>
           <Grid container>
@@ -115,9 +109,7 @@ export default function Login() {
               </Link>
             </Grid>
           </Grid>
-          {errors.server && (
-            <Typography color="error">{errors.server.message}</Typography>
-          )}
+          {errors.server && <Typography color="error">{errors.server.message}</Typography>}
         </Box>
       </Box>
     </Container>

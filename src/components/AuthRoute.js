@@ -1,5 +1,5 @@
 import { Outlet, Navigate } from 'react-router-dom';
-import { useUser } from 'context/UserProvider';
+import useUser from '../hooks/user/useUser';
 
 function AuthRoute() {
   const { user } = useUser();

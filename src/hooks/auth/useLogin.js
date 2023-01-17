@@ -1,32 +1,28 @@
-import { useUser } from 'context/UserProvider';
-import useAxiosFunction from '../axios/useAxiosFunction';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import useToken from './useToken';
+import { api, setHeaderToken } from '../../api/api';
+import { useMutation, useQueryClient } from 'react-query';
 
+const login = async (loginCredentials) => {
+  const { data } = await api.post('login', loginCredentials, {
+    withCredentials: true,
+  });
+  return data;
+};
 
 function useLogin() {
-  const { setUser } = useUser();
-  const { setAccessToken } = useToken();
-  const [axiosFn, response, error, isLoading] = useAxiosFunction();
-
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const login = async (loginCredentials) => {
-    await axiosFn('POST', 'login', {
-      data: loginCredentials,
-    });
-  };
+  const { mutate, error } = useMutation({
+    mutationFn: (loginCredentials) => login(loginCredentials),
+    onSuccess: (data) => {
+      setHeaderToken(data.accessToken);
+      queryClient.setQueryData(['user'], data.user);
+      navigate('/profile');
+    },
+  });
 
-  useEffect(() => {
-    if (response.data) {
-      setUser(response.data.user);
-      setAccessToken(response.data.accessToken);
-      response && navigate('/profile');
-    }
-  }, [response, setUser, setAccessToken, navigate]);
-
-  return [login, response, error, isLoading];
+  return { mutateLogin: mutate, errorLogin: error };
 }
 
 export default useLogin;

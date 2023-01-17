@@ -7,43 +7,48 @@ import ChildCareIcon from '@mui/icons-material/ChildCare';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Joi from 'joi';
-import { email, password, name } from '../utils/joiValidations';
-import { useUser } from '../context/UserProvider';
-import { useNavigate } from 'react-router-dom';
+import { name } from '../utils/joiValidations';
+import useUser from '../hooks/user/useUser';
 import { useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
+import useUpdateUser from '../hooks/user/useUpdateUser';
+import { useEffect, useState } from 'react';
+import Alert from '@mui/material/Alert';
 
 const schema = Joi.object({
   firstName: name,
   lastName: name,
-  email,
-  password,
 });
 
 export default function Profile() {
-  const navigate = useNavigate();
-  const { register: registerRequest, user } = useUser();// TODO: wrong use of register
+  const { user } = useUser();
+  const { mutateUser, errorMutateUser, isSuccessMutateUser } = useUpdateUser(user?._id);
+  const [alert, setAlert] = useState({ type: '', message: '' });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
-    clearErrors,
   } = useForm({ resolver: joiResolver(schema) });
 
   const onSubmit = async (data) => {
-    try {
-      clearErrors('server');
-      await registerRequest(data);
-      navigate('/');
-    } catch (error) {
-      setError('server', {
-        type: 'server',
-        message: error.response.data.error.message,
+    await mutateUser(data);
+  };
+
+  useEffect(() => {
+    if (isSuccessMutateUser) {
+      setAlert({ type: 'success', message: 'update successful' });
+    }
+  }, [isSuccessMutateUser]);
+
+  useEffect(() => {
+    if (errorMutateUser) {
+      setAlert({
+        type: 'error',
+        message: errorMutateUser.response?.data?.error?.message || errorMutateUser.message, // TODO: return from server the same path
       });
     }
-  };
+  }, [errorMutateUser]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -81,26 +86,16 @@ export default function Profile() {
                 error={!!errors.lastName}
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Email Address"
-                value={user.email}
-                disabled
-              />
-            </Grid>
+            {/* <Grid item xs={12}>
+              <TextField fullWidth label="Email Address" value={user.email} disabled />
+            </Grid> */}
           </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+            {' '}
+            {/* TODO: disable button after submit and enable after on change */}
             Update
           </Button>
-          {errors.server && (
-            <Typography color="error">{errors.server.message}</Typography>
-          )}
+          {alert.type && <Alert severity={alert.type}>{alert.message}</Alert>}
         </Box>
       </Box>
     </Container>

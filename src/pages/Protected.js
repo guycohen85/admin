@@ -1,16 +1,10 @@
 import React, { useEffect } from 'react';
-import useAuthAxiosFunction from 'hooks/axios/useAxiosAuthFunction';
+import { api } from '../api/api';
 
 function Protected() {
-  const [axiosAuth, response1] = useAuthAxiosFunction();
-
   useEffect(() => {
-    axiosAuth('POST', 'protected');
+    api.post('protected');
   }, []);
-
-  useEffect(() => {
-    console.log(response1.data);
-  }, [response1]);
 
   return <h1>Protected</h1>;
 }

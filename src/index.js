@@ -4,9 +4,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './startup/fonts';
 import AppThemeProvider from 'startup/theme';
-import { UserProvider } from 'context/UserProvider';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
 const queryClient = new QueryClient();
 
@@ -16,9 +16,8 @@ root.render(
   <BrowserRouter>
     <AppThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <UserProvider>
-          <App />
-        </UserProvider>
+        <App />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </AppThemeProvider>
   </BrowserRouter>

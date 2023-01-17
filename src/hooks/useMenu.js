@@ -1,9 +1,9 @@
-import { useUser } from '../context/UserProvider';
+import useUser from './user/useUser';
 import useLogout from './auth/useLogout';
 
 function useMenu() {
   const { user } = useUser();
-  const logout = useLogout();
+  const { mutateLogout } = useLogout();
 
   let headerMenu = [];
   let settingsMenu = [];
@@ -13,7 +13,7 @@ function useMenu() {
     headerMenu = [{ path: '/protected', name: 'Protected' }];
     settingsMenu = [
       { path: '/profile', name: 'Profile' },
-      { name: 'Logout', handleClick: logout, component: 'span' },
+      { name: 'Logout', handleClick: mutateLogout, component: 'span' },
     ];
   } else {
     //* Guest links

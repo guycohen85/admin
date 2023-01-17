@@ -1,26 +1,29 @@
-import { useUser } from 'context/UserProvider';
-import useAuthAxiosFunction from '../axios/useAxiosAuthFunction';
+import useUser from '../user/useUser';
 import { useNavigate } from 'react-router-dom';
-import useToken from './useToken';
+import { api, setHeaderToken } from '../../api/api';
+import { useMutation, useQueryClient } from 'react-query';
 
+const logout = (id) => {
+  if (!id) return null;
+  return api.post('logout', { id }, { withCredentials: true });
+};
 
 function useLogout() {
-  const { user, removeUser } = useUser();
-  const { setAccessToken } = useToken();
-  const [axiosFn] = useAuthAxiosFunction();
-
+  const { user } = useUser();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const logout = async () => {
-    axiosFn('POST', 'logout', {
-      data: { id: user.id },
-    });
-    removeUser();
-    setAccessToken(null);
-    navigate('/login');
-  };
+  const { mutate } = useMutation({
+    mutationFn: () => logout(user?._id),
+    onSettled: () => {
+      setHeaderToken(null);
+      queryClient.setQueryData(['user'], null);
+      window.localStorage.removeItem('user');
+      navigate('/login');
+    },
+  });
 
-  return logout;
+  return { mutateLogout: mutate };
 }
 
 export default useLogout;
