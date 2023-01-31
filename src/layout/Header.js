@@ -158,6 +158,9 @@ function Header() {
               {settingsMenu.map((setting) => (
                 // <MenuItem key={setting} onClick={handleCloseUserMenu}>
                 <MenuItem
+                  // disableGutters={true}
+                  // dense={true}
+                  sx={{ padding: '0' }}
                   key={setting.name}
                   onClick={() => handleCloseUserMenu()}
                 >
@@ -165,9 +168,9 @@ function Header() {
                     component={setting.component || Link}
                     to={setting.path || null}
                     onClick={setting.handleClick || null}
-                    textAlign="center"
+                    // textAlign="center"
                     color="white"
-                    sx={{ textDecoration: 'none' }}
+                    sx={{ textDecoration: 'none', flexGrow: 1, padding: '6px 16px' }}
                   >
                     {setting.name}
                   </Typography>
