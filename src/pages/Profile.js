@@ -26,13 +26,15 @@ export default function Profile() {
   const [alert, setAlert] = useState({ type: '', message: '' });
 
   const {
+    formState: { errors, isDirty },
     register,
     handleSubmit,
-    formState: { errors },
+    reset,
   } = useForm({ resolver: joiResolver(schema) });
 
   const onSubmit = async (data) => {
     await mutateUser(data);
+    reset(data);
   };
 
   useEffect(() => {
@@ -90,9 +92,13 @@ export default function Profile() {
               <TextField fullWidth label="Email Address" value={user.email} disabled />
             </Grid> */}
           </Grid>
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-            {' '}
-            {/* TODO: disable button after submit and enable after on change */}
+          <Button
+            type="submit"
+            disabled={!isDirty}
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
             Update
           </Button>
           {alert.type && <Alert severity={alert.type}>{alert.message}</Alert>}
