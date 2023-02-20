@@ -10,7 +10,10 @@ function useMenu() {
 
   if (user) {
     //* Auth links
-    headerMenu = [{ path: '/protected', name: 'Protected' }];
+    headerMenu = [
+      { path: '/protected', name: 'Protected' },
+      { path: '/users', name: 'Users' },
+    ];
     settingsMenu = [
       { path: '/profile', name: 'Profile' },
       { name: 'Logout', handleClick: mutateLogout, component: 'span' },

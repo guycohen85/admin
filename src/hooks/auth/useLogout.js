@@ -1,6 +1,6 @@
 import useUser from '../user/useUser';
 import { useNavigate } from 'react-router-dom';
-import { api, setHeaderToken } from '../../api/api';
+import { api, setHeaderToken } from '../../services/api';
 import { useMutation, useQueryClient } from 'react-query';
 
 const logout = (id) => {

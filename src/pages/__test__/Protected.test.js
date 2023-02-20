@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Protected from './Protected';
+import Protected from '../Protected';
 
 test('renders Protected', () => {
   render(<Protected />);

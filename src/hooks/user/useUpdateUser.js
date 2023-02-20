@@ -1,5 +1,5 @@
 // import { useNavigate } from 'react-router-dom';
-import { api } from '../../api/api';
+import { api } from '../../services/api';
 import { useQueryClient, useMutation } from 'react-query';
 
 const updateUser = async (id, userCredentials) => {
